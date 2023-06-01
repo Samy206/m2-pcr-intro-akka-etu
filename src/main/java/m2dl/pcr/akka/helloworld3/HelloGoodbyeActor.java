@@ -17,7 +17,8 @@ public class HelloGoodbyeActor extends UntypedActor {
         public void apply(Object msg) throws Exception {
             if (msg instanceof String) {
                 log.info("Hello " + msg + "!");
-                getContext().become(goodbye,false);
+                // Garder ou non l'ensemble des états de la pile
+                getContext().become(goodbye,true);
             } else {
                 unhandled(msg);
             }
@@ -28,6 +29,19 @@ public class HelloGoodbyeActor extends UntypedActor {
         public void apply(Object msg) throws Exception {
             if (msg instanceof String) {
                 log.info("Good bye " + msg + "!");
+                //getContext().unbecome();
+                getContext().become(goodafternoon, true);
+            } else {
+                unhandled(msg);
+            }
+        }
+    };
+
+    Procedure<Object> goodafternoon = new Procedure<Object>() {
+        public void apply(Object msg) throws Exception {
+            if (msg instanceof String) {
+                log.info("Good afternoon " + msg + "!");
+                getContext().become(goodbye, true);
                 getContext().unbecome();
             } else {
                 unhandled(msg);
